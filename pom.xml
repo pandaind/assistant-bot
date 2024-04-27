@@ -36,6 +36,11 @@
             <artifactId>camel-telegram</artifactId>
             <version>4.5.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-slack-starter</artifactId>
+            <version>4.5.0</version>
+        </dependency>
 
         <!--Langchain4j -->
 

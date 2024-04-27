@@ -29,6 +29,7 @@ public class LangChain4jConfig {
     public EmbeddingStoreIngestor embeddingStoreIngestor() {
         return EmbeddingStoreIngestor.builder()
                 .documentSplitter(DocumentSplitters.recursive(300, 0))
+                // splits every 300 characters from document as chunks
                 .embeddingModel(embeddingModel())
                 .embeddingStore(embeddingStore)
                 .build();
