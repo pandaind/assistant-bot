@@ -31,7 +31,6 @@ public class LangChain4jConfig {
     public EmbeddingStoreIngestor embeddingStoreIngestor() {
         return EmbeddingStoreIngestor.builder()
                 .documentSplitter(DocumentSplitters.recursive(300, 0))
-                // splits every 300 characters from document as chunks
                 .embeddingModel(embeddingModel())
                 .embeddingStore(embeddingStore)
                 .build();
@@ -65,7 +64,9 @@ public class LangChain4jConfig {
                         .build())
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .contentRetriever(EmbeddingStoreContentRetriever.builder()
-                        .embeddingStore(embeddingStore).embeddingModel(embeddingModel()).build())
+                        .embeddingStore(embeddingStore)
+                        .embeddingModel(embeddingModel())
+                        .build())
                 .build();
     }
 }

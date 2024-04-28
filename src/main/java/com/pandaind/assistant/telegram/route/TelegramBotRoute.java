@@ -20,6 +20,7 @@ public class TelegramBotRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("telegram:bots?authorizationToken=" + TelegramConstant.TOKEN)
                 .routeId("TELEGRAM_BOTS")
+                .throttle(1).timePeriodMillis(60000)
                 .process(telegramBotProcessor)
                 .to("telegram:bots?authorizationToken=" + TelegramConstant.TOKEN);
     }

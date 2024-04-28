@@ -130,3 +130,28 @@ When discussing strategies to improve the performance of language models, "Retri
 - **Flexibility and Scalability**: Prompt engineering offers flexibility but may not scale well for highly specialized tasks without substantial prompt optimization. Finetuning scales well as it customizes the model to specific tasks. RAG scales with the availability and quality of external data sources.
 
 Each method has its place in the NLP toolkit, and the choice between them depends on the specific requirements of the task, available resources, and the desired level of customization.
+
+## Embedding Segments
+When dealing with text embeddings, especially for long documents, it's common to encounter the concepts of **embedding segment size** and **embedding overlap size**. These terms are particularly relevant when splitting large texts into manageable parts before generating embeddings. Here’s an explanation of each:
+
+### Embedding Segment Size
+- **Definition**: Embedding segment size refers to the length of text (in terms of characters, words, or tokens) that is processed at one time to generate an embedding. Because some embedding models, especially those based on transformers, have a maximum input length (like 512 tokens for many BERT variants), longer documents need to be segmented into smaller parts.
+- **Purpose**: Segmenting long texts ensures that the input size conforms to the model's limitations and helps maintain the quality of the embeddings by not truncating important information.
+- **Impact**: Choosing the right segment size is crucial as too small segments might not capture enough context, while too large segments might exceed the model's capacity or not focus tightly enough on relevant details.
+
+### Embedding Overlap Size
+- **Definition**: Embedding overlap size refers to the amount of text that overlaps between consecutive segments when a long document is divided into parts for embedding. For instance, if you have an overlap size of 50 words, the first segment might consist of words 1-500, the second of words 451-950, and so on.
+- **Purpose**: Overlapping segments help to maintain context around the boundaries of each segment. This overlapping ensures that important information at the edges of segments isn't lost or misinterpreted due to lack of surrounding context.
+- **Impact**: Properly configured overlap can improve the coherence of embeddings across a document by providing contextual continuity. However, too much overlap can increase computational load and redundancy without proportional benefits.
+
+### Balancing Segment and Overlap Sizes
+- **Contextual Integrity**: Overlap helps to ensure that the context is not lost at segment boundaries. It allows for smoother transitions and more coherent understanding across segments.
+- **Computational Efficiency**: Larger segments can reduce the number of embeddings needed, while more overlap can increase computational redundancy. It’s important to find a balance that maintains performance without unnecessary computation.
+- **Model Compatibility**: The choices of segment and overlap sizes might also depend on the specific characteristics and requirements of the embedding model being used, such as its handling of context or its maximum input length.
+
+When implementing a text processing system that requires segmenting for embeddings, it's essential to experiment with different segment and overlap sizes to find the best configuration for your specific needs, balancing accuracy and computational efficiency.
+
+
+
+### max output token
+The term "max output tokens" typically refers to the maximum number of tokens (or words, depending on the context) that a language model, like those used in natural language processing (NLP), is allowed or configured to produce in response to a given input. This parameter is crucial for controlling the output length and ensuring that the responses from the model are manageable and relevant.
