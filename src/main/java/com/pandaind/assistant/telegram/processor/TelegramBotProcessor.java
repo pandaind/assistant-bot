@@ -19,11 +19,13 @@ public class TelegramBotProcessor implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         String query = exchange.getIn().getBody(String.class);
+        String chatId = exchange.getIn().getHeader("TELEGRAM_CHAT_ID", String.class);
         if (query != null && !query.isEmpty()) {
             var answer = conversationalRetrievalChain.execute(query);
             exchange.getIn().setBody(answer);
         } else {
             exchange.getIn().setBody("Please, try after sometime");
         }
+        exchange.getIn().setHeader("TELEGRAM_CHAT_ID", chatId);
     }
 }
