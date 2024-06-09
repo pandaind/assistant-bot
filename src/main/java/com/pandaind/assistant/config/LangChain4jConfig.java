@@ -6,20 +6,32 @@ import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.vertexai.VertexAiGeminiChatModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
-import dev.langchain4j.retriever.EmbeddingStoreRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.io.IOException;
 
 @Configuration
 public class LangChain4jConfig {
 
     private final InMemoryEmbeddingStore<TextSegment> embeddingStore = new InMemoryEmbeddingStore<>();
+
+    private final GcpProperties gcpProperties;
+
+    private final HuggingFaceProperties huggingFaceProperties;
+
+    private final OllamaProperties ollamaProperties;
+
+    @Autowired
+    public LangChain4jConfig(GcpProperties gcpProperties, HuggingFaceProperties huggingFaceProperties,
+                             OllamaProperties ollamaProperties) {
+        this.gcpProperties = gcpProperties;
+        this.huggingFaceProperties = huggingFaceProperties;
+        this.ollamaProperties = ollamaProperties;
+    }
 
     @Bean
     public EmbeddingModel embeddingModel() {
@@ -37,31 +49,23 @@ public class LangChain4jConfig {
     }
 
     @Bean
-    public ConversationalRetrievalChain conversationalRetrievalChain() throws IOException {
+    public ConversationalRetrievalChain conversationalRetrievalChain() {
         return ConversationalRetrievalChain.builder()
-                /* .chatLanguageModel(LocalAiChatModel.builder()
-                         .baseUrl("http://localhost:9090")
-                         .modelName("gpt-4-vision-preview")
-                         .maxTokens(10)
-                         .maxRetries(3)
-                         .logRequests(true)
-                         .logResponses(true)
-                         .build())*/
                 /*.chatLanguageModel(HuggingFaceChatModel.builder()
-                        .accessToken(Constants.HUGGING_FACE_TOKEN)
+                        .accessToken(huggingFaceProperties.getToken())
                         .modelId("gpt2")
                         .maxNewTokens(250)
                         .waitForModel(true)
                         .build())*/
-                /*.chatLanguageModel(OllamaChatModel.builder()
-                        .modelName("llama2")
-                        .baseUrl("http://localhost:11434")
-                        .build())*/
-                .chatLanguageModel(VertexAiGeminiChatModel.builder()
-                        .location(Constants.GCP_LOCATION)
-                        .modelName("gemini-experimental")
-                        .project(Constants.GCP_PROJECT)
+                .chatLanguageModel(OllamaChatModel.builder()
+                        .modelName(ollamaProperties.getModelName())
+                        .baseUrl(ollamaProperties.getBaseUrl())
                         .build())
+                /*.chatLanguageModel(VertexAiGeminiChatModel.builder()
+                        .location(gcpProperties.getLocation())
+                        .modelName(gcpProperties.getModelName())
+                        .project(gcpProperties.getProject())
+                        .build())*/
                 .chatMemory(MessageWindowChatMemory.withMaxMessages(10))
                 .contentRetriever(EmbeddingStoreContentRetriever.builder()
                         .embeddingStore(embeddingStore)

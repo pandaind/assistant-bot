@@ -3,7 +3,6 @@ package com.pandaind.assistant.telegram.processor;
 import dev.langchain4j.chain.ConversationalRetrievalChain;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.component.telegram.TelegramConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,7 @@ public class TelegramBotProcessor implements Processor {
     }
 
     @Override
-    public void process(Exchange exchange) throws Exception {
+    public void process(Exchange exchange) {
         String query = exchange.getIn().getBody(String.class);
         if (query != null && !query.isEmpty()) {
             var answer = conversationalRetrievalChain.execute(query);
